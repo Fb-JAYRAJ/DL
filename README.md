@@ -237,8 +237,3 @@ cd dashboard
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-## 👤 Author
-
-**Akhil Saurabh**  
-*Deep Learning & Healthcare AI*
