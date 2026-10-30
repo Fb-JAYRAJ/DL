@@ -709,7 +709,7 @@ with st.sidebar:
 
     # The ONLY Theme Toggle Button in the application
     theme_btn_label = "☀️ Switch to Light Mode" if is_dark else "🌙 Switch to Dark Mode"
-    if st.button(theme_btn_label, use_container_width=True, key="single_theme_toggle"):
+    if st.button(theme_btn_label, width="stretch", key="single_theme_toggle"):
         st.session_state["theme_mode"] = "light" if is_dark else "dark"
         st.rerun()
 
@@ -747,8 +747,8 @@ if page == "🩺 Diagnose":
                 AI-assisted chest radiograph evaluation utilizing deep convolutional transfer learning architectures for acute pathology detection.
             </div>
             <div class="chips-container">
-                <span class="tech-chip tech-chip-accent">DenseNet121 Multi-Label (8 Pathologies)</span>
-                <span class="tech-chip">MobileNetV2 Pneumonia Classifier</span>
+                <span class="tech-chip tech-chip-accent">EfficientNetB0 Multi-Label (8 Pathologies)</span>
+                <span class="tech-chip">EfficientNetB0 Pneumonia Classifier</span>
                 <span class="tech-chip">CheXpert & Kaggle Benchmarks</span>
                 <span class="tech-chip">FastAPI High-Performance Engine</span>
                 <span class="tech-chip">Input: 224×224 RGB</span>
@@ -773,8 +773,8 @@ if page == "🩺 Diagnose":
         analysis_mode = st.radio(
             "Select Evaluation Mode:",
             [
-                "Multi-Disease Analysis (DenseNet121 — 8 Pathologies)",
-                "Pneumonia Binary Screening (MobileNetV2 — Normal vs Pneumonia)"
+                "Multi-Disease Analysis (EfficientNetB0 — 8 Pathologies)",
+                "Pneumonia Binary Screening (EfficientNetB0 — Normal vs Pneumonia)"
             ],
             index=0
         )
@@ -814,7 +814,7 @@ if page == "🩺 Diagnose":
             )
             st.image(active_image, width="stretch")
 
-            analyze_btn = st.button("🔬 Analyze Radiograph", type="primary", use_container_width=True)
+            analyze_btn = st.button("🔬 Analyze Radiograph", type="primary", width="stretch")
         else:
             analyze_btn = False
 
@@ -932,10 +932,10 @@ if page == "🩺 Diagnose":
                     # Horizontal Bar Chart (Plotly)
                     fig = build_horizontal_bar_chart(
                         df_pred,
-                        title="Full Pathology Probability Spectrum (CheXpert DenseNet121)",
+                        title="Full Pathology Probability Spectrum (CheXpert EfficientNetB0)",
                         dark_theme=is_dark
                     )
-                    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+                    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
                     # Pathology Breakdown Table (without threshold slider)
                     st.markdown("#### 📋 Pathology Breakdown Table")
@@ -953,7 +953,7 @@ if page == "🩺 Diagnose":
 
                     st.dataframe(
                         classified_df[["Condition", "Probability (%)", "Status", "Risk Tier"]],
-                        use_container_width=True,
+                        width="stretch",
                         hide_index=True
                     )
 
@@ -966,13 +966,13 @@ if page == "🩺 Diagnose":
                             data=csv_data,
                             file_name=f"healthai_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                             mime="text/csv",
-                            use_container_width=True
+                            width="stretch"
                         )
                     with col_dl2:
                         json_payload = {
                             "patient_radiograph": analysis.get("image_name"),
                             "analysis_timestamp": analysis.get("timestamp"),
-                            "model": "DenseNet121_CheXpert",
+                            "model": "EfficientNetB0_CheXpert",
                             "decision_threshold": threshold,
                             "predictions": predictions,
                             "top_finding": {"condition": top_condition, "probability": top_prob}
@@ -982,7 +982,7 @@ if page == "🩺 Diagnose":
                             data=json.dumps(json_payload, indent=2),
                             file_name=f"healthai_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                             mime="application/json",
-                            use_container_width=True
+                            width="stretch"
                         )
 
             # ---------------- Case B: PNEUMONIA BINARY MODE ----------------
@@ -1025,10 +1025,10 @@ if page == "🩺 Diagnose":
                 ])
                 fig = build_horizontal_bar_chart(
                     df_binary,
-                    title="Binary Classification Likelihood (MobileNetV2)",
+                    title="Binary Classification Likelihood (EfficientNetB0)",
                     dark_theme=is_dark
                 )
-                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+                st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
                 status_flag = "🚩 POSITIVE (Pneumonia)" if pneu_prob >= 0.50 else "✓ Negative (Normal)"
 
@@ -1044,13 +1044,13 @@ if page == "🩺 Diagnose":
                         data=csv_df.to_csv(index=False).encode("utf-8"),
                         file_name=f"healthai_pneumonia_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                         mime="text/csv",
-                        use_container_width=True
+                        width="stretch"
                     )
                 with col_dl2:
                     json_payload = {
                         "patient_radiograph": analysis.get("image_name"),
                         "analysis_timestamp": analysis.get("timestamp"),
-                        "model": "MobileNetV2_Pneumonia",
+                        "model": "EfficientNetB0_Pneumonia",
                         "predicted_label": label,
                         "pneumonia_probability": pneu_prob,
                         "normal_probability": normal_prob
@@ -1060,7 +1060,7 @@ if page == "🩺 Diagnose":
                         data=json.dumps(json_payload, indent=2),
                         file_name=f"healthai_pneumonia_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                         mime="application/json",
-                        use_container_width=True
+                        width="stretch"
                     )
 
 # -----------------------------------------------------------------------------
@@ -1112,7 +1112,7 @@ elif page == "🔬 How It Works & Models":
             <div class="pipeline-step">
                 <div class="step-num">3</div>
                 <div style="font-weight: 600; font-size: 0.9rem;">Feature Extraction</div>
-                <div style="font-size: 0.78rem; opacity: 0.8; margin-top: 4px;">DenseNet121 / MobileNetV2 representations</div>
+                <div style="font-size: 0.78rem; opacity: 0.8; margin-top: 4px;">EfficientNetB0 deep representations</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -1156,7 +1156,7 @@ elif page == "🔬 How It Works & Models":
                     <span class="badge badge-medium">Multi-Label</span>
                 </div>
                 <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse; line-height: 1.8;">
-                    <tr><td style="opacity: 0.75; width: 42%;">Base Architecture:</td><td style="font-weight: 600;">DenseNet121 (ImageNet weights)</td></tr>
+                    <tr><td style="opacity: 0.75; width: 42%;">Base Architecture:</td><td style="font-weight: 600;">EfficientNetB0 (ImageNet weights)</td></tr>
                     <tr><td style="opacity: 0.75;">Head Structure:</td><td>GlobalAvgPool2D → Dropout → Dense(8, sigmoid)</td></tr>
                     <tr><td style="opacity: 0.75;">Training Dataset:</td><td>Stanford CheXpert (CheXpert-v1.0-small)</td></tr>
                     <tr><td style="opacity: 0.75;">Input Tensor Shape:</td><td><code>(224, 224, 3)</code></td></tr>
@@ -1180,7 +1180,7 @@ elif page == "🔬 How It Works & Models":
                     <span class="badge badge-low">Binary Classification</span>
                 </div>
                 <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse; line-height: 1.8;">
-                    <tr><td style="opacity: 0.75; width: 42%;">Base Architecture:</td><td style="font-weight: 600;">MobileNetV2 (ImageNet weights)</td></tr>
+                    <tr><td style="opacity: 0.75; width: 42%;">Base Architecture:</td><td style="font-weight: 600;">EfficientNetB0 (ImageNet weights)</td></tr>
                     <tr><td style="opacity: 0.75;">Head Structure:</td><td>GlobalAvgPool2D → Dropout(0.3) → Dense(1, sigmoid)</td></tr>
                     <tr><td style="opacity: 0.75;">Training Dataset:</td><td>Kaggle Chest X-Ray (Pneumonia) Dataset</td></tr>
                     <tr><td style="opacity: 0.75;">Input Tensor Shape:</td><td><code>(224, 224, 3)</code></td></tr>
